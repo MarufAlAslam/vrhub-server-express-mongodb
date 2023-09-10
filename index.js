@@ -15,7 +15,7 @@ app.get("/", (req, res) => {
 // -----------------------------------------------
 
 const uri =
-  "mongodb+srv://vrhub:C4Kyhxzf20ItNQcu@cluster0.z0kccsz.mongodb.net/?retryWrites=true&w=majority";
+  "mongodb+srv://vrhub:fEc6M3JpguN0aLgh@cluster0.z0kccsz.mongodb.net/?retryWrites=true&w=majority";
 
 // create client
 const client = new MongoClient(uri, {
