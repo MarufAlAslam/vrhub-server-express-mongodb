@@ -89,6 +89,23 @@ async function run() {
         res.json(result);
     });
 
+    // add comment on a blog
+    app.post("/api/v1/addComment/:id", async (req, res) => {
+        const id = req.params.id;
+        const query = { _id: new ObjectId(id) };
+        const comment = req.body;
+        const result = await blogsCollection.updateOne(query, { $push: { comments: comment } });
+        res.json(result);
+    });
+
+    // get all comments on a blog
+    app.get("/api/v1/getComments/:id", async (req, res) => {
+        const id = req.params.id;
+        const query = { _id: new ObjectId(id) };
+        const result = await blogsCollection.findOne(query);
+        res.json(result.comments);
+    });
+
     // delete a blog by id
     app.delete("/api/v1/deleteBlog/:id", async (req, res) => {
         const id = req.params.id;
