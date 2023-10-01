@@ -34,85 +34,8 @@ const blogsCollection = client.db("vrhub").collection("blogs");
 
 async function run() {
   try {
-    await client.connect();
+    // await client.connect();
     await client.db("admin").command({ ping: 1 });
-
-    // -----------------------------------------------
-
-    // create admin
-    app.post("/api/v1/createAdmin", async (req, res) => {
-      const newAdmin = req.body;
-      const result = await adminCollection.insertOne(newAdmin);
-      console.log("new admin added", result);
-      res.json(result);
-    });
-
-    // get admin
-    app.get("/api/v1/getAdmin", async (req, res) => {
-      const cursor = adminCollection.find({});
-      const result = await cursor.toArray();
-      res.json(result);
-    });
-
-    // admin login
-    app.post("/api/v1/adminLogin", async (req, res) => {
-      const admin = req.body;
-      const result = await adminCollection.findOne({
-        email: admin.email,
-        password: admin.password,
-      });
-      res.json(result);
-    });
-
-    // -----------------------------------------------
-
-    // create blog
-    app.post("/api/v1/createBlog", async (req, res) => {
-      const newBlog = req.body;
-      const result = await blogsCollection.insertOne(newBlog);
-      console.log("new blog added", result);
-      res.json(result);
-    });
-
-    // get all blogs
-    app.get("/api/v1/getBlogs", async (req, res) => {
-      const cursor = blogsCollection.find({});
-      const result = await cursor.toArray();
-      res.json(result);
-    });
-
-    // get a blog by id
-    app.get("/api/v1/getBlog/:id", async (req, res) => {
-        const id = req.params.id;
-        const query = { _id: new ObjectId(id) };
-        const result = await blogsCollection.findOne(query);
-        res.json(result);
-    });
-
-    // add comment on a blog
-    app.post("/api/v1/addComment/:id", async (req, res) => {
-        const id = req.params.id;
-        const query = { _id: new ObjectId(id) };
-        const comment = req.body;
-        const result = await blogsCollection.updateOne(query, { $push: { comments: comment } });
-        res.json(result);
-    });
-
-    // get all comments on a blog
-    app.get("/api/v1/getComments/:id", async (req, res) => {
-        const id = req.params.id;
-        const query = { _id: new ObjectId(id) };
-        const result = await blogsCollection.findOne(query);
-        res.json(result.comments);
-    });
-
-    // delete a blog by id
-    app.delete("/api/v1/deleteBlog/:id", async (req, res) => {
-        const id = req.params.id;
-        const query = { _id: new ObjectId(id) };
-        const result = await blogsCollection.deleteOne(query);
-        res.json(result);
-    });
 
     // -----------------------------------------------
 
@@ -123,6 +46,86 @@ async function run() {
 run().catch(console.dir);
 
 // -----------------------------------------------
+
+// create admin
+app.post("/api/v1/createAdmin", async (req, res) => {
+  const newAdmin = req.body;
+  const result = await adminCollection.insertOne(newAdmin);
+  console.log("new admin added", result);
+  res.json(result);
+});
+
+// get admin
+app.get("/api/v1/getAdmin", async (req, res) => {
+  const cursor = adminCollection.find({});
+  const result = await cursor.toArray();
+  res.json(result);
+});
+
+// admin login
+app.post("/api/v1/adminLogin", async (req, res) => {
+  const admin = req.body;
+  const result = await adminCollection.findOne({
+    email: admin.email,
+    password: admin.password,
+  });
+  res.json(result);
+});
+
+// -----------------------------------------------
+
+// create blog
+app.post("/api/v1/createBlog", async (req, res) => {
+  const newBlog = req.body;
+  const result = await blogsCollection.insertOne(newBlog);
+  console.log("new blog added", result);
+  res.json(result);
+});
+
+// get all blogs
+app.get("/api/v1/getBlogs", async (req, res) => {
+  const cursor = blogsCollection.find({});
+  const result = await cursor.toArray();
+  res.json(result);
+});
+
+// get a blog by id
+app.get("/api/v1/getBlog/:id", async (req, res) => {
+  const id = req.params.id;
+  const query = { _id: new ObjectId(id) };
+  const result = await blogsCollection.findOne(query);
+  res.json(result);
+});
+
+// add comment on a blog
+app.post("/api/v1/addComment/:id", async (req, res) => {
+  const id = req.params.id;
+  const query = { _id: new ObjectId(id) };
+  const comment = req.body;
+  const result = await blogsCollection.updateOne(query, {
+    $push: { comments: comment },
+  });
+  res.json(result);
+});
+
+// get all comments on a blog
+app.get("/api/v1/getComments/:id", async (req, res) => {
+  const id = req.params.id;
+  const query = { _id: new ObjectId(id) };
+  const result = await blogsCollection.findOne(query);
+  res.json(result);
+});
+
+// delete a blog by id
+app.delete("/api/v1/deleteBlog/:id", async (req, res) => {
+  const id = req.params.id;
+  const query = { _id: new ObjectId(id) };
+  const result = await blogsCollection.deleteOne(query);
+  res.json(result);
+});
+
+// -----------------------------------------------
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
